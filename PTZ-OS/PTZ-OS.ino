@@ -1,4 +1,4 @@
-  //PTZ - V4 : Ajout du tilt + netoyage du code + reprise du système du compte de step
+  //PTZ - V5 : Ajout sélecteur cam
   //Cobe by VLTV & GAB
   //Dev by GALEX.CO by GALEXGROUP
   //Projet Main by Léo TORRAS and CARL KB
@@ -32,6 +32,20 @@
   int pano = 12; 
   int tilt = 14; 
   int BJ = 27; 
+
+    //Boutton
+  int Off = 17;
+  int SleC1 = 34;
+  int SleC2 = 35;
+  int SleC3 = 32;
+  int SleC4 = 33;
+
+    //Cam control
+  string CamSle = "Cam1";
+  int PanoSle = PanoC1 ;
+  int DirPanoSle = DirPanoC1 ;
+  int TiltSle = TiltC1 ;
+  int DirTiltSle = TiltC1;
   
 
   void setup() {
