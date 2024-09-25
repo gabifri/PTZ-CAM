@@ -1,5 +1,5 @@
 /*
-- PTZ - V9 : Mise au propre du code et MAJ fonction Prg
+- PTZ - V10 : Correction de bug liée a l'éxécution des programe et remise a niveau du protocle de mise hors-tenssion
 - Finalisé le 18/09/2024
 - Cobe by VLTV & GAB
 - Dev by GALEX.CO by GALEXGROUP
@@ -53,7 +53,7 @@
         int StepTiltC4 = 0; //Variable Step Tilt Cam 4
     //Fin C4
     //Ready to Off
-        bool CSleOff = false; //Variable de mise hors tension Cam Séléctionné
+        //bool CSleOff = true; //Variable de mise hors tension Cam Séléctionné
         bool C1off = false; //Variable de mise hors tension Cam 1
         bool C2off = false; //Variable de mise hors tension Cam 2
         bool C3off = false; //Variable de mise hors tension Cam 3
@@ -62,7 +62,7 @@
   //Fin Caméra
 
   //Vitesse
-    int speed=10; //Vitesse de déplacement des moteurs + speed est élevé - le moteur va vite
+    int speed=200; //Vitesse de déplacement des moteurs + speed est élevé - le moteur va vite
   //Fin Vitesse
 
   //Joystick
@@ -192,7 +192,7 @@ void setup() {
 void loop() {
 
   //Initialisation Variable
-    delay(1000);
+    delay(speed);
     float X, Y;
     int B;
     X = analogRead (pano) * (5.0 / 1023.0);
@@ -205,17 +205,17 @@ void loop() {
       if (digitalRead(SleC1) == HIGH){
         switch(CamSle){
           case 2:
-            Serial.println("Case 2");
+            Serial.println("Cam 2 Saved");
             StepPanoC2 = StepPanoSle;
             StepTiltC2 = StepTiltSle;
             break;
           case 3:
-            Serial.println("Case 3");
+            Serial.println("Cam 3 Saved");
             StepPanoC3 = StepPanoSle;
             StepTiltC3 = StepTiltSle;
             break;
           case 4:
-            Serial.println("Case 4");
+            Serial.println("Cam 4 Saved");
             StepPanoC4 = StepPanoSle;
             StepTiltC4 = StepTiltSle;
             break;
@@ -236,17 +236,17 @@ void loop() {
       if (digitalRead(SleC2) == HIGH){
         switch(CamSle){
           case 1:
-            Serial.println("Case 1");
+            Serial.println("Cam 1 Saved");
             StepPanoC1 = StepPanoSle;
             StepTiltC1 = StepTiltSle;
             break;
           case 3:
-            Serial.println("Case 3");
+            Serial.println("Cam 3 Saved");
             StepPanoC3 = StepPanoSle;
             StepTiltC3 = StepTiltSle;
             break;
           case 4:
-            Serial.println("Case 4");
+            Serial.println("Cam 4 Saved");
             StepPanoC4 = StepPanoSle;
             StepTiltC4 = StepTiltSle;
             break;
@@ -267,17 +267,17 @@ void loop() {
       /*if (digitalRead(SleC3) == HIGH){
         switch(CamSle){
           case 1:
-            Serial.println("Case 1");
+            Serial.println("Cam 1 Saved");
             StepPanoC1 = StepPanoSle;
             StepTiltC1 = StepTiltSle;
             break;
           case 2:
-            Serial.println("Case 2");
+            Serial.println("Cam 2 Saved");
             StepPanoC2 = StepPanoSle;
             StepTiltC2 = StepTiltSle;
             break;
           case 4:
-            Serial.println("Case 4");
+            Serial.println("Cam 4 Saved");
             StepPanoC4 = StepPanoSle;
             StepTiltC4 = StepTiltSle;
             break;
@@ -298,17 +298,17 @@ void loop() {
       if (digitalRead(SleC4) == HIGH){
         switch(CamSle){
           case 1:
-            Serial.println("Case 1");
+            Serial.println("Cam 1 Saved");
             StepPanoC1 = StepPanoSle;
             StepTiltC1 = StepTiltSle;
             break;
           case 2:
-            Serial.println("Case 2");
+            Serial.println("Cam 2 Saved");
             StepPanoC2 = StepPanoSle;
             StepTiltC2 = StepTiltSle;
             break;
           case 3:
-            Serial.println("Case 3");
+            Serial.println("Cam 3 Saved");
             StepPanoC3 = StepPanoSle;
             StepTiltC3 = StepTiltSle;
             break;
@@ -326,7 +326,7 @@ void loop() {
     //Fin Select Cam 4
   //Fin Selecteur
   
-    //Mouvement Caméra
+  //Mouvement Caméra
     //Mouvement Pano
         //Droite
             if(Y<=0){
@@ -378,11 +378,11 @@ void loop() {
             }
         //Fin Bas
     //Fin Mouvement Tilt
-    //Fin Mouvement Caméra
+  //Fin Mouvement Caméra
 
-    //Set Prg
+  //Set Prg
     //Set Prg1
-        if(digitalRead(SleC3)==HIGH){
+        if(digitalRead(Set)==HIGH){
         Serial.println("Preset 1 Save");
         P1Pano = 0;
         P1Tilt = 0;
@@ -422,9 +422,9 @@ void loop() {
         P4Tilt = StepTiltSle;
         }
     //Fin Set Prg4
-    //Fin Set Prg
+  //Fin Set Prg
 
-    //Exe Prg
+  //Exe Prg
         //Prg1
             if(digitalRead(SleP1)==HIGH){ //Si le boutton Prg 1 est pressé
                 Serial.println("SleP1 Press"); //Affichage dans le moniteur série
@@ -459,7 +459,7 @@ void loop() {
                                 if(StepPanoSle<P1Pano){ //Si le pano est vers la gauche
                                     Serial.println("Pano on the left detect");
                                     digitalWrite(DirPanoSle, HIGH);
-                                    while (StepPanoSle==P1Pano) { //On règle le pano sur la position du programe
+                                    while (StepPanoSle!=P1Pano) { //On règle le pano sur la position du programe
                                     StepPanoSle = StepPanoSle+1;
                                     digitalWrite(PanoSle, LOW);
                                     delay(speed);
@@ -470,8 +470,8 @@ void loop() {
                                 else { //si le pano est sur la droite
                                     digitalWrite(DirPanoSle,LOW);
                                     Serial.println("Pano on the right detect");
-                                    while (StepPanoSle==P1Pano) { //On règle le pano sur la position du programe
-                                    StepTiltSle = StepTiltSle-1;
+                                    while (StepPanoSle!=P1Pano) { //On règle le pano sur la position du programe
+                                    StepPanoSle = StepPanoSle-1;
                                     digitalWrite(PanoSle, LOW);
                                     delay(speed);
                                     digitalWrite(PanoSle, HIGH);
@@ -483,7 +483,8 @@ void loop() {
                                 if(StepTiltSle<P1Tilt){ //Si le tilt est vers le bas
                                     Serial.println("Tilt on bottom detect");
                                     digitalWrite(DirTiltSle,HIGH);
-                                    while (StepTiltSle==P1Tilt) { //On règle le tilt sur la position du programe
+                                    while (StepTiltSle!=P1Tilt) { //On règle le tilt sur la position du programe
+                                    StepTiltSle = StepTiltSle+1;
                                     digitalWrite(TiltSle, LOW);
                                     delay(speed);
                                     digitalWrite(TiltSle, HIGH);
@@ -493,7 +494,8 @@ void loop() {
                                 else { //si le tilt est vers le haut
                                     digitalWrite(DirTiltSle,LOW);
                                     Serial.println("Tilt on the top detect");
-                                    while (StepTiltSle==P1Tilt) {  //On règle le tilt sur la position du programe
+                                    while (StepTiltSle!=P1Tilt) {  //On règle le tilt sur la position du programe
+                                    StepTiltSle = StepTiltSle-1;
                                     digitalWrite(TiltSle, LOW);
                                     delay(speed);
                                     digitalWrite(TiltSle, HIGH);
@@ -543,18 +545,18 @@ void loop() {
                                     Serial.println("Pano on the left detect");
                                     digitalWrite(DirPanoSle, HIGH);
                                     while (StepPanoSle==P2Pano) { //On règle le pano sur la position du programe
-                                    StepPanoSle = StepPanoSle+1;
-                                    digitalWrite(PanoSle, LOW);
-                                    delay(speed);
-                                    digitalWrite(PanoSle, HIGH);
-                                    delay(speed);
+                                      StepPanoSle = StepPanoSle+1;
+                                      digitalWrite(PanoSle, LOW);
+                                      delay(speed);
+                                      digitalWrite(PanoSle, HIGH);
+                                      delay(speed);
                                     }
                                 }
                                 else { //si le pano est sur la droite
                                     digitalWrite(DirPanoSle,LOW);
                                     Serial.println("Pano on the right detect");
                                     while (StepPanoSle==P2Pano) { //On règle le pano sur la position du programe
-                                    StepTiltSle = StepTiltSle-1;
+                                    StepPanoSle = StepPanoSle-1;
                                     digitalWrite(PanoSle, LOW);
                                     delay(speed);
                                     digitalWrite(PanoSle, HIGH);
@@ -567,25 +569,26 @@ void loop() {
                                     Serial.println("Tilt on bottom detect");
                                     digitalWrite(DirTiltSle,HIGH);
                                     while (StepTiltSle==P2Tilt) { //On règle le tilt sur la position du programe
-                                    digitalWrite(TiltSle, LOW);
-                                    delay(speed);
-                                    digitalWrite(TiltSle, HIGH);
-                                    delay(speed);
+                                      StepTiltSle = StepTiltSle+1;
+                                      digitalWrite(TiltSle, LOW);
+                                      delay(speed);
+                                      digitalWrite(TiltSle, HIGH);
+                                      delay(speed);
                                     }
                                 }
                                 else { //si le tilt est vers le haut
                                     digitalWrite(DirTiltSle,LOW);
                                     Serial.println("Tilt on the top detect");
                                     while (StepTiltSle==P2Tilt) {  //On règle le tilt sur la position du programe
-                                    digitalWrite(TiltSle, LOW);
-                                    delay(speed);
-                                    digitalWrite(TiltSle, HIGH);
-                                    delay(speed);
+                                      StepTiltSle = StepTiltSle-1;
+                                      digitalWrite(TiltSle, LOW);
+                                      delay(speed);
+                                      digitalWrite(TiltSle, HIGH);
+                                      delay(speed);
                                     }
                                 }
                             //Fin Tilt
                         }
-                    
                     }
                 }
             }
@@ -637,7 +640,7 @@ void loop() {
                                     digitalWrite(DirPanoSle,LOW);
                                     Serial.println("Pano on the right detect");
                                     while (StepPanoSle==P3Pano) { //On règle le pano sur la position du programe
-                                    StepTiltSle = StepTiltSle-1;
+                                    StepPanoSle = StepPanoSle-1;
                                     digitalWrite(PanoSle, LOW);
                                     delay(speed);
                                     digitalWrite(PanoSle, HIGH);
@@ -650,20 +653,22 @@ void loop() {
                                     Serial.println("Tilt on bottom detect");
                                     digitalWrite(DirTiltSle,HIGH);
                                     while (StepTiltSle==P3Tilt) { //On règle le tilt sur la position du programe
-                                    digitalWrite(TiltSle, LOW);
-                                    delay(speed);
-                                    digitalWrite(TiltSle, HIGH);
-                                    delay(speed);
+                                      StepTiltSle = StepTiltSle+1;
+                                      digitalWrite(TiltSle, LOW);
+                                      delay(speed);
+                                      digitalWrite(TiltSle, HIGH);
+                                      delay(speed);
                                     }
                                 }
                                 else { //si le tilt est vers le haut
                                     digitalWrite(DirTiltSle,LOW);
                                     Serial.println("Tilt on the top detect");
                                     while (StepTiltSle==P3Tilt) {  //On règle le tilt sur la position du programe
-                                    digitalWrite(TiltSle, LOW);
-                                    delay(speed);
-                                    digitalWrite(TiltSle, HIGH);
-                                    delay(speed);
+                                      StepTiltSle = StepTiltSle-1;
+                                      digitalWrite(TiltSle, LOW);
+                                      delay(speed);
+                                      digitalWrite(TiltSle, HIGH);
+                                      delay(speed);
                                     }
                                 }
                             //Fin Tilt
@@ -709,22 +714,22 @@ void loop() {
                                     Serial.println("Pano on the left detect");
                                     digitalWrite(DirPanoSle, HIGH);
                                     while (StepPanoSle==P4Pano) { //On règle le pano sur la position du programe
-                                    StepPanoSle = StepPanoSle+1;
-                                    digitalWrite(PanoSle, LOW);
-                                    delay(speed);
-                                    digitalWrite(PanoSle, HIGH);
-                                    delay(speed);
+                                      StepPanoSle = StepPanoSle+1;
+                                      digitalWrite(PanoSle, LOW);
+                                      delay(speed);
+                                      digitalWrite(PanoSle, HIGH);
+                                      delay(speed);
                                     }
                                 }
                                 else { //si le pano est sur la droite
                                     digitalWrite(DirPanoSle,LOW);
                                     Serial.println("Pano on the right detect");
                                     while (StepPanoSle==P4Pano) { //On règle le pano sur la position du programe
-                                    StepTiltSle = StepTiltSle-1;
-                                    digitalWrite(PanoSle, LOW);
-                                    delay(speed);
-                                    digitalWrite(PanoSle, HIGH);
-                                    delay(speed);
+                                      StepPanoSle = StepPanoSle-1;
+                                      digitalWrite(PanoSle, LOW);
+                                      delay(speed);
+                                      digitalWrite(PanoSle, HIGH);
+                                      delay(speed);
                                     }
                                 }
                             //Fin Pano
@@ -733,20 +738,22 @@ void loop() {
                                     Serial.println("Tilt on bottom detect");
                                     digitalWrite(DirTiltSle,HIGH);
                                     while (StepTiltSle==P4Tilt) { //On règle le tilt sur la position du programe
-                                    digitalWrite(TiltSle, LOW);
-                                    delay(speed);
-                                    digitalWrite(TiltSle, HIGH);
-                                    delay(speed);
+                                      StepTiltSle = StepTiltSle+1;
+                                      digitalWrite(TiltSle, LOW);
+                                      delay(speed);
+                                      digitalWrite(TiltSle, HIGH);
+                                      delay(speed);
                                     }
                                 }
                                 else { //si le tilt est vers le haut
                                     digitalWrite(DirTiltSle,LOW);
                                     Serial.println("Tilt on the top detect");
                                     while (StepTiltSle==P4Tilt) {  //On règle le tilt sur la position du programe
-                                    digitalWrite(TiltSle, LOW);
-                                    delay(speed);
-                                    digitalWrite(TiltSle, HIGH);
-                                    delay(speed);
+                                      StepTiltSle = StepTiltSle-1;
+                                      digitalWrite(TiltSle, LOW);
+                                      delay(speed);
+                                      digitalWrite(TiltSle, HIGH);
+                                      delay(speed);
                                     }
                                 }
                             //Fin Tilt
@@ -758,38 +765,73 @@ void loop() {
         //Fin Prg4
 
 
-    //Fin Exe Prg
+  //Fin Exe Prg
 
-    //Protocole de Mise Hors Tension
+  //Protocole de Mise Hors Tension
         if(digitalRead(Off)==HIGH){ //Si le boutton Off est pressé
+            C1off = false;
+            C2off = false;
+            C3off = false;
+            C4off = false;
+            Serial.print("C1off = ");
+            Serial.println(C1off);
+            Serial.print("C2off = ");
+            Serial.println(C2off);
+            Serial.print("C3off = ");
+            Serial.println(C3off);
+            Serial.print("C4off = ");
+            Serial.println(C4off);
             Serial.println("Off Press"); //Affichage dans le moniteur série
             Serial.println("Protocol de Mise Hors-Tension Lancée");
 
-            while(C1off!=true && C2off!=true && C3off!=true && C4off!=true){
-                if (C1off!=true){
+            switch(CamSle){ //Sauvegarde des positions des caméras
+              case 1:
+                Serial.println("Cam 1 Saved");
+                StepPanoC1 = StepPanoSle;
+                StepTiltC1 = StepTiltSle;
+                break;
+              case 2:
+                  Serial.println("Cam 2 Saved");
+                  StepPanoC2 = StepPanoSle;
+                  StepTiltC2 = StepTiltSle;
+                  break;
+              case 3:
+                  Serial.println("Cam 3 Saved");
+                  StepPanoC3 = StepPanoSle;
+                  StepTiltC3 = StepTiltSle;
+                  break;
+              case 4:
+                  Serial.println("Cam 4 Saved");
+                  StepPanoC4 = StepPanoSle;
+                  StepTiltC4 = StepTiltSle;
+                  break;
+            }
+
+            do {
+                Serial.println("While Exe");
+                //CSleOff = false;
+                if (C1off==false){
                     switch(CamSle){
                         case 2:
-                            Serial.println("Case 2");
+                            Serial.println("Cam 2 Saved");
                             StepPanoC2 = StepPanoSle;
                             StepTiltC2 = StepTiltSle;
-                            C2off = CSleOff;
                             break;
                         case 3:
-                            Serial.println("Case 3");
+                            Serial.println("Cam 3 Saved");
                             StepPanoC3 = StepPanoSle;
                             StepTiltC3 = StepTiltSle;
-                            C3off = CSleOff;
                             break;
                         case 4:
-                            Serial.println("Case 4");
+                            Serial.println("Cam 4 Saved");
                             StepPanoC4 = StepPanoSle;
                             StepTiltC4 = StepTiltSle;
-                            C4off = CSleOff;
                             break;
                     }
                     //Cam 1
                         CamSle = 1;
-                        CSleOff = C1off;
+                        //CSleOff = C1off;
+                        C1off = true;
                         Serial.print("Cam : ");
                         Serial.print(CamSle);
                         Serial.println(" select");
@@ -804,30 +846,29 @@ void loop() {
                 }
                 else{
                     Serial.println("Cam 1 ready to off");
-                    if (C2off!=true){
+                    Serial.println("ELSE EXE");
+                    if (C2off==false){
                         switch(CamSle){
                             case 1:
-                                Serial.println("Case 1");
+                                Serial.println("Cam 1 Saved");
                                 StepPanoC1 = StepPanoSle;
                                 StepTiltC1 = StepTiltSle;
-                                C1off = CSleOff;
                                 break;
                             case 3:
-                                Serial.println("Case 3");
+                                Serial.println("Cam 3 Saved");
                                 StepPanoC3 = StepPanoSle;
                                 StepTiltC3 = StepTiltSle;
-                                C3off = CSleOff;
                                 break;
                             case 4:
-                                Serial.println("Case 4");
+                                Serial.println("Cam 4 Saved");
                                 StepPanoC4 = StepPanoSle;
                                 StepTiltC4 = StepTiltSle;
-                                C4off = CSleOff;
                                 break;
                         }
                         //Cam 2
                             CamSle = 2;
-                            CSleOff = C2off;
+                            //CSleOff = C2off;
+                            C2off = true;
                             Serial.print("Cam : ");
                             Serial.print(CamSle);
                             Serial.println(" select");
@@ -842,30 +883,28 @@ void loop() {
                     }
                     else{
                         Serial.println("Cam 2 ready to off");
-                        if (C3off!=true){
+                        if (C3off==false){
                             switch(CamSle){
                                 case 1:
-                                    Serial.println("Case 1");
+                                    Serial.println("Cam 1 Saved");
                                     StepPanoC1 = StepPanoSle;
                                     StepTiltC1 = StepTiltSle;
-                                    C1off = CSleOff;
                                     break;
                                 case 2:
-                                    Serial.println("Case 2");
+                                    Serial.println("Cam 2 Saved");
                                     StepPanoC2 = StepPanoSle;
                                     StepTiltC2 = StepTiltSle;
-                                    C2off = CSleOff;
                                     break;
                                 case 4:
-                                    Serial.println("Case 4");
+                                    Serial.println("Cam 4 Saved");
                                     StepPanoC4 = StepPanoSle;
                                     StepTiltC4 = StepTiltSle;
-                                    C4off = CSleOff;
                                     break;
                             }
                             //Cam 3
                                 CamSle = 3;
-                                CSleOff = C3off;
+                                //CSleOff = C3off;
+                                C3off = true;
                                 Serial.print("Cam : ");
                                 Serial.print(CamSle);
                                 Serial.println(" select");
@@ -880,30 +919,28 @@ void loop() {
                         }
                         else {
                             Serial.println("Cam 3 ready to off");
-                            if (C4off!=true){
+                            if (C4off==false){
                                 switch(CamSle){
                                     case 1:
-                                        Serial.println("Case 1");
+                                        Serial.println("Cam 1 Saved");
                                         StepPanoC1 = StepPanoSle;
                                         StepTiltC1 = StepTiltSle;
-                                        C1off = CSleOff;
                                         break;
                                     case 2:
-                                        Serial.println("Case 2");
+                                        Serial.println("Cam 2 Saved");
                                         StepPanoC2 = StepPanoSle;
                                         StepTiltC2 = StepTiltSle;
-                                        C2off = CSleOff;
                                         break;
                                     case 3:
-                                        Serial.println("Case 3");
+                                        Serial.println("Cam 3 Saved");
                                         StepPanoC3 = StepPanoSle;
                                         StepTiltC3 = StepTiltSle;
-                                        C3off = CSleOff;
                                         break;
                                 }
                                 //Cam 4
                                     CamSle = 4;
-                                    CSleOff = C4off;
+                                    //CSleOff = C4off;
+                                    C4off = true;
                                     Serial.print("Cam : ");
                                     Serial.print(CamSle);   
                                     Serial.println(" select");
@@ -922,12 +959,16 @@ void loop() {
 
                 //Vérif Cam Pos off
                     if(StepPanoSle==0 && StepTiltSle==0){ //Si la caméra est déjà sur la position off
-                        Serial.println("Cam 1 ready to be off.");
-                        CSleOff = true;
+                        Serial.print("Cam ");
+                        Serial.print(CamSle);
+                        Serial.println(" on 0 pos");
+                        //CSleOff = true;
                     }
                     else { //Si la caméra n'est pas sur la position Off 
                         if(StepPanoSle==0){ //On vérifie si le Pano de la caméra n'est pas déjà sur la position off
-                            Serial.println("Pano Cam 1 is allready on the position off.");
+                            Serial.print("Pano Cam ");
+                            Serial.print(CamSle);
+                            Serial.println(" is allready on the position off.");
                         }
                         else{
                             if(StepTiltSle==0){ //On vérifie si le Tilt de la caméra n'est pas déjà sur la position off
@@ -936,30 +977,31 @@ void loop() {
                 //Fin Vérif Cam Pos off
 
                             else { //La caméra n'est pas sur la position off donc on met la caméra en position
+                                Serial.println("Launch 0 pos");
                                 //Pano
                                     //Détéction Pano Droite/Gauche
                                     if(StepPanoSle<0){ //Si le pano est vers la gauche
                                         //Serial.println("Pano on the left detect");
                                         digitalWrite(DirPanoSle, HIGH);
                                         while (StepPanoSle!=0) { 
-                                        //Serial.println("While L Exe");
-                                        StepPanoSle = StepPanoSle+1;
-                                        digitalWrite(PanoSle, LOW);
-                                        delay(speed);
-                                        digitalWrite(PanoSle, HIGH);
-                                        delay(speed);
+                                          //Serial.println("While L Exe");
+                                          StepPanoSle = StepPanoSle+1;
+                                          digitalWrite(PanoSle, LOW);
+                                          delay(speed);
+                                          digitalWrite(PanoSle, HIGH);
+                                          delay(speed);
                                         }
                                     }
                                     else { //si le pano est sur la droite
                                         digitalWrite(DirPanoSle,LOW);
                                         //Serial.println("Pano on the right detect");
                                         while (StepPanoSle!=0) { 
-                                        //Serial.println("while R exe");
-                                        StepPanoSle = StepPanoSle-1;
-                                        digitalWrite(PanoSle, LOW);
-                                        delay(speed);
-                                        digitalWrite(PanoSle, HIGH);
-                                        delay(speed);
+                                          //Serial.println("while R exe");
+                                          StepPanoSle = StepPanoSle-1;
+                                          digitalWrite(PanoSle, LOW);
+                                          delay(speed);
+                                          digitalWrite(PanoSle, HIGH);
+                                          delay(speed);
                                         }
                                     }
                                 //Fin Pano
@@ -968,24 +1010,24 @@ void loop() {
                                         //Serial.println("Tilt on bottom detect");
                                         digitalWrite(DirTiltSle,HIGH);
                                         while (StepTiltSle!=0) { 
-                                        //Serial.println("While B Exe");
-                                        StepTiltSle = StepTiltSle+1;
-                                        digitalWrite(TiltSle, LOW);
-                                        delay(speed);
-                                        digitalWrite(TiltSle, HIGH);
-                                        delay(speed);
+                                          //Serial.println("While H Exe");
+                                          StepTiltSle = StepTiltSle+1;
+                                          digitalWrite(TiltSle, LOW);
+                                          delay(speed);
+                                          digitalWrite(TiltSle, HIGH);
+                                          delay(speed);
                                         }
                                     }
                                     else { //si le tilt est vers le haut
                                         digitalWrite(DirTiltSle,LOW);
                                         //Serial.println("Tilt on the top detect");
                                         while (StepTiltSle!=0) { 
-                                        //Serial.println("while T exe");
-                                        StepTiltSle = StepTiltSle-1;
-                                        digitalWrite(TiltSle, LOW);
-                                        delay(speed);
-                                        digitalWrite(TiltSle, HIGH);
-                                        delay(speed);
+                                          //Serial.println("while B exe");
+                                          StepTiltSle = StepTiltSle-1;
+                                          digitalWrite(TiltSle, LOW);
+                                          delay(speed);
+                                          digitalWrite(TiltSle, HIGH);
+                                          delay(speed);
                                         }
                                     }
                                 //Fin Tilt
@@ -993,13 +1035,30 @@ void loop() {
                         
                         }
                     }
-                CSleOff = true;
+                //CSleOff = true;
                 Serial.print("Cam ");
                 Serial.print(CamSle);
-                Serial.println("ready to be off.");
-            } //Fin While
+                Serial.println(" ready to be off.");
+                Serial.print("C1off = ");
+                Serial.println(C1off);
+                Serial.print("C2off = ");
+                Serial.println(C2off);
+                Serial.print("C3off = ");
+                Serial.println(C3off);
+                Serial.print("C4off = ");
+                Serial.println(C4off);
+            } while(C1off==0 || C2off==0 || C3off==0 || C4off==0); //Fin While
             Serial.println("Protocol de Mise Hors-Tension Terminée");
-                
+            //Cam control
+              CamSle = 1; //Variable de la caméra séléctionné
+              PanoSle = PanoC1 ; //Variable Pano Cam Séléctionné
+              DirPanoSle = DirPanoC1 ; //Variable Direction Pano Cam Séléctionné
+              TiltSle = TiltC1 ; //Variable Tilt Cam Séléctionné
+              DirTiltSle = DirTiltC1; //Variable Direction Tilt Cam Séléctionné 
+              StepPanoSle = StepPanoC1 ; //Variable Step Pano Cam Séléctionné
+              StepTiltSle = StepTiltC1 ; //Variable Step Tilt Cam Séléctionné
+              Serial.println("Cam 1 select");
+            //Fin Cam control
             }
     //Fin Protocole de Mise Hors Tension
 
