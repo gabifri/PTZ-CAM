@@ -26,9 +26,9 @@ Si vous voulez changer de carte, ou alors utilisé d'autre port, il suffit de ch
 2. Rendez-vous à la séction `Def Variable` à la ligne `10`
 3. Pour les caméras :
    - Les ports de moteur des panos se situe en lignes `14`, `25`, `36` et `47`
-    - Les ports de direction en lignes `15`, `26`, `37` et `48`
+     - Les ports de direction en lignes `15`, `26`, `37` et `48`
    - Les ports de moteur des panos se situe en lignes `18`, `29`, `40` et `51`
-    - Les ports de direction en lignes `19`, `30`, `41` et `52`
+     - Les ports de direction en lignes `19`, `30`, `41` et `52`
 ```
 //Def Variables
   //Caméra
