@@ -1,24 +1,55 @@
-  //PTZ - V3 : control pano with analog joystick OK
+  //PTZ - V4 : Ajout du tilt + netoyage du code + reprise du système du compte de step
   //Cobe by VLTV & GAB
   //Dev by GALEX.CO by GALEXGROUP
   //Projet Main by Léo TORRAS and CARL KB
-  int speed=50; // Cette valeur détermine la vitesse du moteur, 1 = rapide, 100 = lent
-  int pano = 12; // signal de l'axe X sur entrée A0
-  int tilt = 14; // signal de l'axe Y sur entrée A1
-  int BJ = 27; // Bouton-poussoir en broche 7
-  int step = 0;
+
+  //Def Variables
+    //Caméra
+      //C1
+        //PANO
   int PanoC1 = 16;
-  int TiltC1 = 18;
   int DirPanoC1 = 4;
+  int StepPanoC1 = 0;
+        //TILT
+  int TiltC1 = 18;
   int DirTiltC1 = 5;
+  int StepTiltC1 = 0;
+  
+      //C2
+        //PANO
+  int PanoC2 = 0;
+  int DirPanoC2 = 0;
+  int StepPanoC2 = 0;
+        //TILT
+  int TiltC2 = 0;
+  int DirTiltC2 = 0;
+  int StepTiltC2 = 0;
+  
+    //Vitesse
+  int speed=50;
+
+    //Joystick
+  int pano = 12; 
+  int tilt = 14; 
+  int BJ = 27; 
+  
 
   void setup() {
-      pinMode(DirPanoC1, OUTPUT); // On initialise les broches D4 et D5 en sorties
+      //Caméra
+        //Moteur
+          //Pano
+      pinMode(DirPanoC1, OUTPUT); 
       pinMode(PanoC1, OUTPUT);
-      pinMode (pano, INPUT); // définition de A0 comme une entrée
-      pinMode (tilt, INPUT); // définition de A1 comme une entrée
-      pinMode (BJ, INPUT); // définition de 7 comme une entrée
-      //digitalWrite(BJ, HIGH); // Activation de la résistance de Pull-Up interne de la carte Uno
+        //Tilt
+      pinMode(DirTiltC1, OUTPUT);
+      pinMode(TiltC1, OUTPUT);
+
+      //Joystick
+      pinMode (pano, INPUT); 
+      pinMode (tilt, INPUT); 
+      pinMode (BJ, INPUT); 
+      
+      //Serial
       Serial.begin (9600);
       //Serial.print(step);
       Serial.println("PTZ CAM - READY");
@@ -48,7 +79,7 @@
     //Mouvement Pano C1
       //Droite
     if(Y<=0){
-        step = step+1;
+        StepPanoC1 = StepPanoC1+1;
         //Serial.println("Pano go right");
         //Serial.print("\n");
         digitalWrite(DirPanoC1, HIGH);
@@ -62,7 +93,7 @@
     if(Y>=19){
         //Serial.print("Pano go left");
         //Serial.print("\n");
-        step = step-1;
+        StepPanoC1 = StepPanoC1-1;
         digitalWrite(DirPanoC1, LOW);
         digitalWrite(PanoC1, LOW);
         delay(speed); // On envoie 200 impulsions pour faire tourner le moteur de 200 pas dans un sens
@@ -73,10 +104,10 @@
     //Mouvement Tilt C1
       //Haut
     if(X<=0){
-        step = step+1;
+        StepTiltC1 = StepTiltC1+1;
         //Serial.println("Pano go right");
         //Serial.print("\n");
-        digitalWrite(DirTitlC1, HIGH);
+        digitalWrite(DirTiltC1, HIGH);
         digitalWrite(TiltC1, LOW);
         delay(speed); // On envoie 200 impulsions pour faire tourner le moteur de 200 pas dans un sens
         digitalWrite(TiltC1, HIGH); // La valeur de tempo determine le temps entre 2 impulsions en ms
@@ -87,25 +118,29 @@
     if(X>=19){
         //Serial.print("Pano go left");
         //Serial.print("\n");
-        step = step-1;
-        digitalWrite(DirTitlC1, LOW);
-        digitalWrite(TitlC1, LOW);
+        StepTiltC1 = StepTiltC1-1;
+        digitalWrite(DirTiltC1, LOW);
+        digitalWrite(TiltC1, LOW);
         delay(speed); // On envoie 200 impulsions pour faire tourner le moteur de 200 pas dans un sens
-        digitalWrite(TitlC1, HIGH); // La valeur de tempo determine le temps entre 2 impulsions en ms
+        digitalWrite(TiltC1, HIGH); // La valeur de tempo determine le temps entre 2 impulsions en ms
         delay(speed);
     }
 
+    //Retour à Zéro
     if(digitalRead(BJ)==LOW){
         //Serial.print("BJ Press");
         //Serial.print("\n");
         //Serial.print(step);
         //Serial.print("\n");
-        if(step<0){ //Si le pano est vers la gauche
+
+        //Retour à zéro du Pano
+            //Détéction Pano Droite/Gauche
+        if(StepPanoC1<0){ //Si le pano est vers la gauche
           //Serial.println("Pano on the left detect");
           digitalWrite(DirPanoC1,HIGH);
-          while (step!=0) { 
+          while (StepPanoC1!=0) { 
             //Serial.println("While L Exe");
-            step = step+1;
+            StepPanoC1 = StepPanoC1+1;
             digitalWrite(PanoC1, LOW);
             delay(speed);
             digitalWrite(PanoC1, HIGH);
@@ -115,15 +150,43 @@
         else { //si le pano est sur la droite
           digitalWrite(DirPanoC1,LOW);
           //Serial.println("Pano on the right detect");
-          while (step!=0) { 
+          while (StepPanoC1!=0) { 
             //Serial.println("while R exe");
-            step = step-1;
+            StepPanoC1 = StepPanoC1-1;
             digitalWrite(PanoC1, LOW);
             delay(speed);
             digitalWrite(PanoC1, HIGH);
             delay(speed);
           }
         }
+
+        //Retour à zéro du tilt
+            //Détéction tilt Haut/Bas
+        if(StepTiltC1<0){ //Si le tilt est vers le bas
+          //Serial.println("Tilt on bottom detect");
+          digitalWrite(DirTiltC1,HIGH);
+          while (StepTiltC1!=0) { 
+            //Serial.println("While B Exe");
+            StepTiltC1 = StepTiltC1+1;
+            digitalWrite(TiltC1, LOW);
+            delay(speed);
+            digitalWrite(TiltC1, HIGH);
+            delay(speed);
+          }
+        }
+        else { //si le tilt est vers le haut
+          digitalWrite(DirTiltC1,LOW);
+          //Serial.println("Tilt on the top detect");
+          while (StepTiltC1!=0) { 
+            //Serial.println("while T exe");
+            StepTiltC1 = StepTiltC1-1;
+            digitalWrite(TiltC1, LOW);
+            delay(speed);
+            digitalWrite(TiltC1, HIGH);
+            delay(speed);
+          }
+        }
+
     }
 
   }
