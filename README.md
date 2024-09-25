@@ -20,4 +20,59 @@ Pour ce système il faut :
 <h2>💾Software</h2>
 
 Le fichier [PTZ-OS.ino](PTZ-OS/PTZ-OS.ino) est conçu pour la carte EPS32 Wroom comme dit précédement.
-Le schéma de branchement est fournie ([Plug Diagram/diagram.json](Plug-Diagrame/diagram.json))
+Le schéma de branchement est fournie dans [diagram.json](https://github.com/gabifri/PTZ-CAM/blob/926148c32025576a5adcfc06a6aa886a27feca95/Plug%20Diagrame/diagram.json) qu'il faut interprété dans le site [Wokwi](https://wokwi.com/). 
+Si vous voulez changer de carte, ou alors utilisé d'autre port, il suffit de changer le mapping des ports des différents devices dans les premières lignes du codes :
+1. Ouvrez le fichier [PTZ-OS.ino](PTZ-OS/PTZ-OS.ino)
+2. Rendez-vous à la séction `Def Variable` à la ligne `10`
+3. Pour les caméras :
+   - Les ports de moteur des panos se situe en lignes `14`, `25`, `36` et `47`
+    - Les ports de direction en lignes `15`, `26`, `37` et `48`
+   - Les ports de moteur des panos se situe en lignes `18`, `29`, `40` et `51`
+    - Les ports de direction en lignes `19`, `30`, `41` et `52`
+```
+//Def Variables
+  //Caméra
+    //C1
+      //PANO
+        int PanoC1 = 16; //Pin moteur Pano Cam 1
+        int DirPanoC1 = 4; //Pin direction moteur Pano Cam 1
+        int StepPanoC1 = 0; //Variable Step Pano Cam 1
+      //TILT
+        int TiltC1 = 18; //Pin moteur Tilt Cam 1
+        int DirTiltC1 = 5; //Pin direction moteur Tilt Cam 1
+        int StepTiltC1 = 0; //Variable Step Tilt Cam 1
+    //Fin C1
+
+    //C2
+      //PANO
+        int PanoC2 = 23; //Pin moteur Pano Cam 2
+        int DirPanoC2 = 22; //Pin direction moteur Pano Cam 2
+        int StepPanoC2 = 0; //Variable Step Pano Cam 2
+      //TILT
+        int TiltC2 = 19; //Pin moteur Tilt Cam 2
+        int DirTiltC2 = 21; //Pin direction moteur Tilt Cam 2
+        int StepTiltC2 = 0; //Variable Step Tilt Cam 2
+    //Fin C2
+
+    //C3
+      //PANO
+        int PanoC3 = 0; //Pin moteur Pano Cam 3
+        int DirPanoC3 = 0; //Pin direction moteur Pano Cam 3
+        int StepPanoC3 = 0; //Variable Step Pano Cam 3
+      //TILT
+        int TiltC3 = 0; //Pin moteur Tilt Cam 3
+        int DirTiltC3 = 0; //Pin direction moteur Tilt Cam 3
+        int StepTiltC3 = 0; //Variable Step Tilt Cam 3
+    //Fin C3
+
+    //C4
+      //PANO
+        int PanoC4 = 0; //Pin moteur Pano Cam 4
+        int DirPanoC4 = 0; //Pin direction moteur Pano Cam 4
+        int StepPanoC4 = 0; //Variable Step Pano Cam 4
+      //TILT
+        int TiltC4 = 0; //Pin moteur Tilt Cam 4
+        int DirTiltC4 = 0; //Pin direction moteur Tilt Cam 4
+        int StepTiltC4 = 0; //Variable Step Tilt Cam 4
+    //Fin C4
+```
