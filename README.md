@@ -19,4 +19,5 @@ Pour ce système il faut :
 
 <h2>💾Software</h2>
 
-Le fichier [PTZ-OS.ino](PTZ-OS/PTZ-OS.ino)
+Le fichier [PTZ-OS.ino](PTZ-OS/PTZ-OS.ino) est conçu pour la carte EPS32 Wroom comme dit précédement.
+Le schéma de branchement est fournie ([Plug Diagram/diagram.json](Plug-Diagrame/diagram.json))
