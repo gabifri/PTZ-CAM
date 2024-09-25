@@ -1,5 +1,5 @@
 /*
-- PTZ - V10 : Correction de bug liée a l'éxécution des programe et remise a niveau du protocle de mise hors-tenssion
+- PTZ - V11 : Mise au propre du code et MAJ fonction Prg
 - Finalisé le 18/09/2024
 - Cobe by VLTV & GAB
 - Dev by GALEX.CO by GALEXGROUP
@@ -77,7 +77,7 @@
     int SleC2 = 35; //Pin Boutton Selection Cam 2
     int SleC3 = 32; //Pin Boutton Selection Cam 3
     int SleC4 = 33; //Pin Boutton Selection Cam 4
-    int Set = 15; //Pin Boutton Set Prg
+    int Set = ; //Pin Boutton Set Prg
   //Fin Boutton
 
   //PRG
