@@ -1,4 +1,4 @@
-//PTZ - V7 : Code Final Simulation
+//PTZ - V8 : Code Final Simulation
 //Finalisé le 18/09/2024
 //Cobe by VLTV & GAB
 //Dev by GALEX.CO by GALEXGROUP
@@ -258,59 +258,258 @@ void loop() {
 //Mouvement Pano
     //Droite
   if(Y<=0){
-      StepPanoSle = StepPanoSle+1;
-      //Serial.println("Pano go right");
-      //Serial.print("\n");
-      digitalWrite(DirPanoSle, HIGH);
-      digitalWrite(PanoSle, LOW);
-      delay(speed); // On envoie 200 impulsions pour faire tourner le moteur de 200 pas dans un sens
-      digitalWrite(PanoSle, HIGH); // La valeur de tempo determine le temps entre 2 impulsions en ms
-      delay(speed);
+    StepPanoSle = StepPanoSle+1;
+    //Serial.println("Pano go right");
+    digitalWrite(DirPanoSle, HIGH);
+    digitalWrite(PanoSle, LOW);
+    delay(speed); 
+    digitalWrite(PanoSle, HIGH);
+    delay(speed);
   }
-
     //Gauche
   if(Y>=19){
-      //Serial.print("Pano go left");
-      //Serial.print("\n");
-      StepPanoSle = StepPanoSle-1;
-      digitalWrite(DirPanoSle, LOW);
-      digitalWrite(PanoSle, LOW);
-      delay(speed); // On envoie 200 impulsions pour faire tourner le moteur de 200 pas dans un sens
-      digitalWrite(PanoSle, HIGH); // La valeur de tempo determine le temps entre 2 impulsions en ms
-      delay(speed);
+    //Serial.println("Pano go left");
+    StepPanoSle = StepPanoSle-1;
+    digitalWrite(DirPanoSle, LOW);
+    digitalWrite(PanoSle, LOW);
+    delay(speed); 
+    digitalWrite(PanoSle, HIGH); 
+    delay(speed);
   }
 
 //Mouvement Tilt
     //Haut
   if(X<=0){
-      StepTiltSle = StepTiltSle+1;
-      //Serial.println("Pano go right");
-      //Serial.print("\n");
-      digitalWrite(DirTiltSle, HIGH);
-      digitalWrite(TiltSle, LOW);
-      delay(speed); // On envoie 200 impulsions pour faire tourner le moteur de 200 pas dans un sens
-      digitalWrite(TiltSle, HIGH); // La valeur de tempo determine le temps entre 2 impulsions en ms
-      delay(speed);
+    StepTiltSle = StepTiltSle+1;
+    //Serial.println("Tilt go right");
+    digitalWrite(DirTiltSle, HIGH);
+    digitalWrite(TiltSle, LOW);
+    delay(speed); 
+    digitalWrite(TiltSle, HIGH);
+    delay(speed);
   }
 
     //Bas
   if(X>=19){
-      //Serial.print("Pano go left");
-      //Serial.print("\n");
+      //Serial.println("Tilt go left");
       StepTiltSle = StepTiltSle-1;
       digitalWrite(DirTiltSle, LOW);
       digitalWrite(TiltSle, LOW);
-      delay(speed); // On envoie 200 impulsions pour faire tourner le moteur de 200 pas dans un sens
-      digitalWrite(TiltSle, HIGH); // La valeur de tempo determine le temps entre 2 impulsions en ms
+      delay(speed); 
+      digitalWrite(TiltSle, HIGH);
       delay(speed);
   }
+//Set Prg
+  if(digitalRead(SleP1)==HIGH && digitalRead(Set)==HIGH){
+    P1Pano = StepPanoSle;
+    P1Tilt = StepTiltSle;
+  }
+  if(digitalRead(SleP2)==HIGH && digitalRead(Set)==HIGH){
+    P2Pano = StepPanoSle;
+    P2Tilt = StepTiltSle;
+  }
+  if(digitalRead(SleP3)==HIGH && digitalRead(Set)==HIGH){
+    P3Pano = StepPanoSle;
+    P3Tilt = StepTiltSle;
+  }
+  if(digitalRead(SleP4)==HIGH && digitalRead(Set)==HIGH){
+    P4Pano = StepPanoSle;
+    P4Tilt = StepTiltSle;
+  }
+
+//Exe Prg
+    //Prg1
+    if(digitalRead(SleP1)==HIGH){
+        Serial.println("SleP1 Press");
+        //Pano
+            //Détéction Pano Droite/Gauche
+        if(StepPanoSle>P1Pano){ //Si le pano est vers la gauche
+          //Serial.println("Pano on the left detect");
+          digitalWrite(DirPanoSle, HIGH);
+          while (StepPanoSle==P1Pano) { 
+            digitalWrite(PanoSle, LOW);
+            delay(speed);
+            digitalWrite(PanoSle, HIGH);
+            delay(speed);
+          }
+        }
+        else { //si le pano est sur la droite
+          digitalWrite(DirPanoSle,LOW);
+          //Serial.println("Pano on the right detect");
+          while (StepPanoSle==P1Pano) { 
+            digitalWrite(PanoSle, LOW);
+            delay(speed);
+            digitalWrite(PanoSle, HIGH);
+            delay(speed);
+          }
+        }
+        if(StepTiltSle<P1Tilt){ //Si le tilt est vers le bas
+          //Serial.println("Tilt on bottom detect");
+          digitalWrite(DirTiltSle,HIGH);
+          while (StepTiltSle==P1Tilt) { 
+            digitalWrite(TiltSle, LOW);
+            delay(speed);
+            digitalWrite(TiltSle, HIGH);
+            delay(speed);
+          }
+        }
+        else { //si le tilt est vers le haut
+          digitalWrite(DirTiltSle,LOW);
+          //Serial.println("Tilt on the top detect");
+          while (StepTiltSle==P1Tilt) { 
+            digitalWrite(TiltSle, LOW);
+            delay(speed);
+            digitalWrite(TiltSle, HIGH);
+            delay(speed);
+          }
+        }
+    }
+
+    //Prg2
+    if(digitalRead(SleP2)==HIGH){
+        Serial.println("SleP2 Press");
+        //Pano
+            //Détéction Pano Droite/Gauche
+        if(StepPanoSle>P2Pano){ //Si le pano est vers la gauche
+          //Serial.println("Pano on the left detect");
+          digitalWrite(DirPanoSle, HIGH);
+          while (StepPanoSle==P2Pano) { 
+            digitalWrite(PanoSle, LOW);
+            delay(speed);
+            digitalWrite(PanoSle, HIGH);
+            delay(speed);
+          }
+        }
+        else { //si le pano est sur la droite
+          digitalWrite(DirPanoSle,LOW);
+          //Serial.println("Pano on the right detect");
+          while (StepPanoSle==P2Pano) { 
+            digitalWrite(PanoSle, LOW);
+            delay(speed);
+            digitalWrite(PanoSle, HIGH);
+            delay(speed);
+          }
+        }
+        if(StepTiltSle<P1Tilt){ //Si le tilt est vers le bas
+          //Serial.println("Tilt on bottom detect");
+          digitalWrite(DirTiltSle,HIGH);
+          while (StepTiltSle==P2Tilt) { 
+            digitalWrite(TiltSle, LOW);
+            delay(speed);
+            digitalWrite(TiltSle, HIGH);
+            delay(speed);
+          }
+        }
+        else { //si le tilt est vers le haut
+          digitalWrite(DirTiltSle,LOW);
+          //Serial.println("Tilt on the top detect");
+          while (StepTiltSle==P2Tilt) { 
+            digitalWrite(TiltSle, LOW);
+            delay(speed);
+            digitalWrite(TiltSle, HIGH);
+            delay(speed);
+          }
+        }
+    }
+
+    //Prg3
+    if(digitalRead(SleP3)==HIGH){
+        Serial.println("SleP3 Press");
+        //Pano
+            //Détéction Pano Droite/Gauche
+        if(StepPanoSle>P3Pano){ //Si le pano est vers la gauche
+          //Serial.println("Pano on the left detect");
+          digitalWrite(DirPanoSle, HIGH);
+          while (StepPanoSle==P3Pano) { 
+            digitalWrite(PanoSle, LOW);
+            delay(speed);
+            digitalWrite(PanoSle, HIGH);
+            delay(speed);
+          }
+        }
+        else { //si le pano est sur la droite
+          digitalWrite(DirPanoSle,LOW);
+          //Serial.println("Pano on the right detect");
+          while (StepPanoSle==P3Pano) { 
+            digitalWrite(PanoSle, LOW);
+            delay(speed);
+            digitalWrite(PanoSle, HIGH);
+            delay(speed);
+          }
+        }
+        if(StepTiltSle<P3Tilt){ //Si le tilt est vers le bas
+          //Serial.println("Tilt on bottom detect");
+          digitalWrite(DirTiltSle,HIGH);
+          while (StepTiltSle==P3Tilt) { 
+            digitalWrite(TiltSle, LOW);
+            delay(speed);
+            digitalWrite(TiltSle, HIGH);
+            delay(speed);
+          }
+        }
+        else { //si le tilt est vers le haut
+          digitalWrite(DirTiltSle,LOW);
+          //Serial.println("Tilt on the top detect");
+          while (StepTiltSle==P3Tilt) { 
+            digitalWrite(TiltSle, LOW);
+            delay(speed);
+            digitalWrite(TiltSle, HIGH);
+            delay(speed);
+          }
+        }
+    }
+
+    //Prg4
+    if(digitalRead(SleP4)==HIGH){
+        Serial.println("SleP4 Press");
+        //Pano
+            //Détéction Pano Droite/Gauche
+        if(StepPanoSle>P4Pano){ //Si le pano est vers la gauche
+          //Serial.println("Pano on the left detect");
+          digitalWrite(DirPanoSle, HIGH);
+          while (StepPanoSle==P4Pano) { 
+            digitalWrite(PanoSle, LOW);
+            delay(speed);
+            digitalWrite(PanoSle, HIGH);
+            delay(speed);
+          }
+        }
+        else { //si le pano est sur la droite
+          digitalWrite(DirPanoSle,LOW);
+          //Serial.println("Pano on the right detect");
+          while (StepPanoSle==P4Pano) { 
+            digitalWrite(PanoSle, LOW);
+            delay(speed);
+            digitalWrite(PanoSle, HIGH);
+            delay(speed);
+          }
+        }
+        if(StepTiltSle<P4Tilt){ //Si le tilt est vers le bas
+          //Serial.println("Tilt on bottom detect");
+          digitalWrite(DirTiltSle,HIGH);
+          while (StepTiltSle==P4Tilt) { 
+            digitalWrite(TiltSle, LOW);
+            delay(speed);
+            digitalWrite(TiltSle, HIGH);
+            delay(speed);
+          }
+        }
+        else { //si le tilt est vers le haut
+          digitalWrite(DirTiltSle,LOW);
+          //Serial.println("Tilt on the top detect");
+          while (StepTiltSle==P4Tilt) { 
+            digitalWrite(TiltSle, LOW);
+            delay(speed);
+            digitalWrite(TiltSle, HIGH);
+            delay(speed);
+          }
+        }
+    }
 
 //Retour à Zéro
-  if(digitalRead(BJ)==HIGH){
-      Serial.print("BJ Press");
-      Serial.print("\n");
-      //Serial.print(step);
-      //Serial.print("\n");
+  if(digitalRead(Off)==HIGH){
+      Serial.println("BJ Press");
+      //Serial.println(step);
 
       //Retour à zéro du Pano
           //Détéction Pano Droite/Gauche
@@ -365,71 +564,5 @@ void loop() {
           delay(speed);
         }
       }
-
-//Set Prg
-  if(digitalRead(SleP1)==HIGH && digitalRead(Set)==HIGH){
-    P1Pano = StepPanoSle;
-    P1Tilt = StepTiltSle;
   }
-  if(digitalRead(SleP2)==HIGH && digitalRead(Set)==HIGH){
-    P2Pano = StepPanoSle;
-    P2Tilt = StepTiltSle;
-  }
-  if(digitalRead(SleP3)==HIGH && digitalRead(Set)==HIGH){
-    P3Pano = StepPanoSle;
-    P3Tilt = StepTiltSle;
-  }
-  if(digitalRead(SleP4)==HIGH && digitalRead(Set)==HIGH){
-    P4Pano = StepPanoSle;
-    P4Tilt = StepTiltSle;
-  }
-  }
-
-//Exe Prg
-    //Prg1
-    if(digitalRead(SleP1)==HIGH){
-        Serial.println("SleP1 Press");
-        //Pano
-            //Détéction Pano Droite/Gauche
-        if(StepPanoSle>P1Pano){ //Si le pano est vers la gauche
-          //Serial.println("Pano on the left detect");
-          digitalWrite(DirPanoSle, HIGH);
-          while (StepPanoSle==P1Pano) { 
-            digitalWrite(PanoSle, LOW);
-            delay(speed);
-            digitalWrite(PanoSle, HIGH);
-            delay(speed);
-          }
-        }
-        else { //si le pano est sur la droite
-          digitalWrite(DirPanoSle,LOW);
-          //Serial.println("Pano on the right detect");
-          while (StepPanoSle==P1Pano) { 
-            digitalWrite(PanoSle, LOW);
-            delay(speed);
-            digitalWrite(PanoSle, HIGH);
-            delay(speed);
-          }
-        }
-        if(StepTiltSle<P1Tilt){ //Si le tilt est vers le bas
-          //Serial.println("Tilt on bottom detect");
-          digitalWrite(DirTiltSle,HIGH);
-          while (StepTiltSle==P1Tilt) { 
-            digitalWrite(TiltSle, LOW);
-            delay(speed);
-            digitalWrite(TiltSle, HIGH);
-            delay(speed);
-          }
-        }
-        else { //si le tilt est vers le haut
-          digitalWrite(DirTiltSle,LOW);
-          //Serial.println("Tilt on the top detect");
-          while (StepTiltSle==P1Tilt) { 
-            digitalWrite(TiltSle, LOW);
-            delay(speed);
-            digitalWrite(TiltSle, HIGH);
-            delay(speed);
-          }
-        }
-}
 }
